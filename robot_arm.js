@@ -1,3 +1,7 @@
+//Morgan Lincicum
+//CPSC444 Lab 3 Part 2
+//9/12/26
+
 //----------------------------------------------------------------------------
 // State Variable Setup 
 //----------------------------------------------------------------------------
@@ -259,8 +263,10 @@ function render() {
 
       //Fingers 
 
-      //Position Lower Finger Joint
+      //Position Wrist Joint
 		modelViewMatrix = mult(modelViewMatrix, translate(1.0, 0.0, 0.0));
+      matStack.push(modelViewMatrix);
+
 		//Lower Finger Joint
 		modelViewMatrix = mult(modelViewMatrix, rotate(45,vec3(0,0,1)));
       modelViewMatrix = mult(modelViewMatrix, rotate(elbow,vec3(0,0,1)));
@@ -309,6 +315,35 @@ function render() {
          modelViewMatrix = mult(modelViewMatrix, translate(0.0, 0.0, 1.5));
          gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
 			gl.drawArrays(armShape.type, armShape.start, armShape.size);
+		//Undo Scale
+		modelViewMatrix = matStack.pop();
+
+      //Back to wrist
+      modelViewMatrix = matStack.pop();
+      
+		//Thumb Joint
+		modelViewMatrix = mult(modelViewMatrix, rotate(-45,vec3(0,0,1)));
+		//Position Lower Thumb Cube
+		modelViewMatrix = mult(modelViewMatrix, translate(0.4, -0.1, 0.0));
+		//Scale and Draw Lower Thumb
+		matStack.push(modelViewMatrix);
+			modelViewMatrix = mult(modelViewMatrix, scalem(0.5, 0.2, 0.3));
+			gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+			gl.drawArrays(armShape.type, armShape.start, armShape.size);
+         
+		//Undo Scale
+		modelViewMatrix = matStack.pop();
+
+      //Position Upper Thumb Cube
+      	modelViewMatrix = mult(modelViewMatrix, translate(0.25, 0, 0.0));
+      modelViewMatrix = mult(modelViewMatrix, rotate(45,vec3(0,0,1)));
+		modelViewMatrix = mult(modelViewMatrix, translate(0.25, 0, 0.0));
+		//Scale and Draw Lower Thumb
+		matStack.push(modelViewMatrix);
+			modelViewMatrix = mult(modelViewMatrix, scalem(0.5, 0.2, 0.3));
+			gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+			gl.drawArrays(armShape.type, armShape.start, armShape.size);
+         
 		//Undo Scale
 		modelViewMatrix = matStack.pop();
 
