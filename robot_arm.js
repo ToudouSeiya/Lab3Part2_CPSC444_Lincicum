@@ -22,7 +22,7 @@ var projectionMatrix  = mat4();
 var modelViewMatrixLoc, projectionMatrixLoc;
 
 //Model state variables
-var shoulder = 0, elbow = 0;
+var shoulder = 0, elbow = 0, fingers = 0;
 
 
 //----------------------------------------------------------------------------
@@ -261,17 +261,18 @@ function render() {
 		//Undo Scale
 		modelViewMatrix = matStack.pop();
 
+
       //Fingers 
 
       //Position Wrist Joint
-		modelViewMatrix = mult(modelViewMatrix, translate(1.0, 0.0, 0.0));
+		modelViewMatrix = mult(modelViewMatrix, translate(1, 0.0, 0.0));
       matStack.push(modelViewMatrix);
 
 		//Lower Finger Joint
 		modelViewMatrix = mult(modelViewMatrix, rotate(45,vec3(0,0,1)));
-      modelViewMatrix = mult(modelViewMatrix, rotate(elbow,vec3(0,0,1)));
+      modelViewMatrix = mult(modelViewMatrix, rotate(-fingers,vec3(0,0,1)));
 		//Position Lower Finger Cubes
-		modelViewMatrix = mult(modelViewMatrix, translate(0.4, 0.2, 0));
+		modelViewMatrix = mult(modelViewMatrix, translate(0.25, 0.1, 0));
 		//Scale and Draw Lower Fingers
 		matStack.push(modelViewMatrix);
          //leftmost
@@ -323,8 +324,9 @@ function render() {
       
 		//Thumb Joint
 		modelViewMatrix = mult(modelViewMatrix, rotate(-45,vec3(0,0,1)));
+      modelViewMatrix = mult(modelViewMatrix, rotate(fingers,vec3(0,0,1)));
 		//Position Lower Thumb Cube
-		modelViewMatrix = mult(modelViewMatrix, translate(0.4, -0.1, 0.0));
+		modelViewMatrix = mult(modelViewMatrix, translate(0.25, -0.1, 0.0));
 		//Scale and Draw Lower Thumb
 		matStack.push(modelViewMatrix);
 			modelViewMatrix = mult(modelViewMatrix, scalem(0.5, 0.2, 0.3));
@@ -335,7 +337,7 @@ function render() {
 		modelViewMatrix = matStack.pop();
 
       //Position Upper Thumb Cube
-      	modelViewMatrix = mult(modelViewMatrix, translate(0.25, 0, 0.0));
+      modelViewMatrix = mult(modelViewMatrix, translate(0.25, 0, 0.0));
       modelViewMatrix = mult(modelViewMatrix, rotate(45,vec3(0,0,1)));
 		modelViewMatrix = mult(modelViewMatrix, translate(0.25, 0, 0.0));
 		//Scale and Draw Lower Thumb
@@ -432,5 +434,17 @@ function handleKeys(timePassed)
    {
       if (elbow > -144) elbow = (elbow - d);
       else elbow = -144;
+   }
+
+   //Finger Updates
+   if (shift && isPressed("F")) 
+   {
+      if (fingers < 20) fingers = (fingers + d);
+      else  fingers = 20;
+   }
+   if (!shift && isPressed("F")) 
+   {
+      if (fingers > -45) fingers = (fingers - d);
+      else fingers = -45;
    }
 }
