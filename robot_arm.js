@@ -222,7 +222,7 @@ function animate()
 function render() {
 	gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 	
-   var armShape = shapes.wireCube;
+   var armShape = shapes.solidCube;
    var matStack = [];
 	
 	//Save view transform
@@ -253,6 +253,61 @@ function render() {
 		matStack.push(modelViewMatrix);
 			modelViewMatrix = mult(modelViewMatrix, scalem(2.0, 0.4, 1.0));
 			gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+			gl.drawArrays(armShape.type, armShape.start, armShape.size);
+		//Undo Scale
+		modelViewMatrix = matStack.pop();
+
+      //Fingers 
+
+      //Position Lower Finger Joint
+		modelViewMatrix = mult(modelViewMatrix, translate(1.0, 0.0, 0.0));
+		//Lower Finger Joint
+		modelViewMatrix = mult(modelViewMatrix, rotate(45,vec3(0,0,1)));
+      modelViewMatrix = mult(modelViewMatrix, rotate(elbow,vec3(0,0,1)));
+		//Position Lower Finger Cubes
+		modelViewMatrix = mult(modelViewMatrix, translate(0.4, 0.2, 0));
+		//Scale and Draw Lower Fingers
+		matStack.push(modelViewMatrix);
+         //leftmost
+			modelViewMatrix = mult(modelViewMatrix, scalem(0.5, 0.2, 0.2));
+         modelViewMatrix = mult(modelViewMatrix, translate(0.0, 0.0, -1.5));
+			gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+         gl.drawArrays(armShape.type, armShape.start, armShape.size);
+
+         //middle
+         modelViewMatrix = mult(modelViewMatrix, translate(0.0, 0.0, 1.5));
+         gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+			gl.drawArrays(armShape.type, armShape.start, armShape.size);
+
+         //rightmost
+         modelViewMatrix = mult(modelViewMatrix, translate(0.0, 0.0, 1.5));
+         gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+			gl.drawArrays(armShape.type, armShape.start, armShape.size);
+		//Undo Scale
+		modelViewMatrix = matStack.pop();
+
+      //Position Upper Finger Joint
+		modelViewMatrix = mult(modelViewMatrix, translate(0.25, 0.0, 0.0));
+		//Upper Finger Joint
+      modelViewMatrix = mult(modelViewMatrix, rotate(-45,vec3(0,0,1)));
+		//Position Upper Finger Cubes
+		modelViewMatrix = mult(modelViewMatrix, translate(0.25, 0, 0));
+		//Scale and Draw Upper Fingers
+		matStack.push(modelViewMatrix);
+         //leftmost
+			modelViewMatrix = mult(modelViewMatrix, scalem(0.5, 0.2, 0.2));
+         modelViewMatrix = mult(modelViewMatrix, translate(0.0, 0.0, -1.5));
+			gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+         gl.drawArrays(armShape.type, armShape.start, armShape.size);
+
+         //middle
+         modelViewMatrix = mult(modelViewMatrix, translate(0.0, 0.0, 1.5));
+         gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+			gl.drawArrays(armShape.type, armShape.start, armShape.size);
+
+         //rightmost
+         modelViewMatrix = mult(modelViewMatrix, translate(0.0, 0.0, 1.5));
+         gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
 			gl.drawArrays(armShape.type, armShape.start, armShape.size);
 		//Undo Scale
 		modelViewMatrix = matStack.pop();
